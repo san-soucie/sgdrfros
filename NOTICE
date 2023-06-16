@@ -1,0 +1,17 @@
+SGDRFROS
+Copyright(c) 2023, John San Soucie
+
+This work includes software developed at
+Woods Hole Oceanographic Institution (https://w..whoi.edu)
+and
+Massachusetts Institute of Technology (https://www.mit.edu)
+
+Portions of src/sgdrf/sgdrf/sgdrf/model.py were adapted from code developed by Uber Technologies, Inc.
+Copyright (c) 2017-2019 Uber Technologies, Inc. All rights reserved.
+
+This project contains code developed by the Open Source Robotics Foundation, Inc.
+Copyright (c) 2015-2023, Open Source Robotics Foundation, Inc. All rights reserved.
+
+Development configuration files and Dockerfiles for this project contain code developed by Allison Thackston
+Copyright (c) 2020-2023, Allison Thackston. All rights reserved
+
