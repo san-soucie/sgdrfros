@@ -4,6 +4,9 @@
 # Base image 
 ###########################################
 FROM osrf/ros:iron-desktop-full-jammy as dev
+
+LABEL org.opencontainers.image.source="https://github.com/san-soucie/sgdrfros"
+
 ENV APP_NAME=sgdrfros
 ENV ROS_DISTRO=IRON
 ENV DEBIAN_FRONTEND=noninteractive
