@@ -20,13 +20,14 @@ import pyro.contrib
 import pyro.optim
 import pyro.util
 from pyro.contrib.gp.util import conditional
+import pyro.nn.module
 from pyro.nn.module import PyroParam, pyro_method
 
 import torch
 import torch.distributions
 import torch.distributions.constraints
 from torch.nn.functional import normalize
-from typing import Union, Collection, Optional
+from typing import Union, Collection, Optional, Type
 from .optimizer import OptimizerType
 from .kernel import KernelType
 from .subsample import SubsampleType
@@ -35,6 +36,115 @@ EPSILON = 1e-2
 
 
 class SGDRF(pyro.contrib.gp.Parameterized):
+    """Streaming Gaussian Dirichlet Random Field model
+
+    Parameters
+    ----------
+    xu_ns : Union[int, Collection[int]]
+        Number of inducing points, either one for each spatiotemporal dimension or a single number.
+    d_mins : Collection[float]
+        A collection containing the minimum extent of each dimension
+    d_maxs : Collection[float]
+        A collection containing the maximum extent of each dimension
+    V : int
+        The number of observation types
+    K : int
+        The number of latent Gaussian processes
+    max_obs : int
+        The maximum number of possible simultaneous categorical observations
+    dir_p : float
+        Initial uniform Dirichlet hyperparameter
+    kernel_type : KernelType, optional
+        Latent Gaussian process kernel type, by default KernelType.Matern52
+    kernel_lengthscale : float, optional
+        Latent Gaussian process kernel lengthscale, by default 1.0
+    kernel_variance : float, optional
+        Latent Gaussian process kernel variance, by default 1.0
+    optimizer_type : OptimizerType, optional
+        Stochastic gradient descent optimization algorithm, by default OptimizerType.Adam
+    optimizer_lr : float, optional
+        Stochastic gradient descent optimization learning rate, by default 0.01
+    optimizer_clip_norm : float, optional
+        Stochastic gradient descent optimization maximum gradient norm, by default 10.0
+    device : torch.device, optional
+        Pytorch device (e.g. `torch.device('cuda')`), by default torch.device("cpu")
+    subsample_n : int, optional
+        Number of past observations to subsample in a single training step, by default 1
+    subsample_type : SubsampleType, optional
+        Subsampling strategy to use, by default SubsampleType.uniform
+    subsample_params : Optional[dict[str, float]], optional
+        A dictionary containing the subsample parameters `exponential` and `weight`, by default `{"exponential": 0.1, "weight": 0.5}`
+    whiten : bool, optional
+        Whether the Gaussian process covariance matrix is whitened, by default False
+    fail_on_nan_loss : bool, optional
+        Whether or not to raise an exception if training loss is NaN, by default True
+    num_particles : int, optional
+        Number of parallel posterior latent samples to draw, by default 1
+    jit : bool, optional
+        Whether or not to JIT-compile the model and guide, by default False
+
+    Attributes
+    ----------
+    xu : torch.Tensor
+        Sparse inducing points
+    dims : int
+        The number of spatiotemporal dimensions for this model
+    V : int
+        The number of observation types
+    K : int
+        The number of latent Gaussian processes
+    M : int
+        The number of inducing points
+    latent_shape : tuple[int]
+        The Pyro shape of the latent Gaussian processes
+    max_obs : int
+        The maximum number of possible simultaneous categorical observations
+    device : torch.device
+        Pytorch device (e.g. `torch.device('cuda')`)
+    dir_p : torch.Tensor
+        The Dirichlet hyperparameters for each entry in the word-topic matrix
+    jitter : float
+        Small jitter to add to covariance matrix diagonal
+    zero_loc : torch.Tensor
+        Tensor of all-zeros matching the inducing points
+    uloc : pyro.nn.module.PyroParam
+        Inducing point mean variational parameter
+    uscaletril : pyro.nn.module.PyroParam
+        Inducing point lower triangular covariance Cholesky decomposition variational parameter
+    word_topic_probs : pyro.nn.module.PyroParam
+        Maximum a posteriori word-topic matrix variational parameter
+    kernel : pyro.contrib.gp.kernels.Kernel
+        Gaussian process kernel
+    whiten : bool
+        Whether the Gaussian process covariance matrix is whitened
+    subsample_type : SubsampleType
+        Subsampling strategy to use
+    subsample_params : dict[str, float]
+        A dictionary containing the subsample parameters `exponential` and `weight`
+    subsample_n : int
+        Number of past observations to subsample in a single training step
+    subsample_n_tensor : torch.Tensor
+        Number of past observations to subsample in a single training step, as a tensor
+    num_particles : int
+        Number of parallel posterior latent samples to draw
+    objective_type : Type[pyro.infer.ELBO]
+        The class of the objective function being used during training
+    objective : pyro.infer.ELBO
+        The objective function used during training
+    xs : torch.Tensor
+        All of the locations of past observations
+    ws : torch.Tensor
+        All of the past observations
+    optimizer : pyro.optim.PyroOptim
+        Stochastic gradient descent optimizer
+    svi : pyro.infer.SVI
+        Stochastic variational inference helper object
+    fail_on_nan_loss : bool
+        Whether or not to raise an exception if training loss is NaN
+    n_xs : bool
+        The number of past observation locations
+    """
+
     def __init__(
         self,
         xu_ns: Union[int, Collection[int]],
@@ -59,6 +169,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         num_particles: int = 1,
         jit: bool = False,
     ):
+        """ """
         super().__init__()
 
         xu_dims = []
@@ -126,8 +237,8 @@ class SGDRF(pyro.contrib.gp.Parameterized):
             vectorize_particles=True,
             max_plate_nesting=1,
         )
-        self.xs = torch.empty(0, *self.xu.shape[1:], device=device, dtype=torch.float)
-        self.ws = torch.empty(0, self.V, device=device, dtype=torch.int)
+        self.xs = torch.empty(0, *self.xu.shape[1:], device=device, dtype=torch.float)  # type: ignore
+        self.ws = torch.empty(0, self.V, device=device, dtype=torch.int)  # type: ignore
         self.optimizer = optimizer_type.instantiate(
             lr=optimizer_lr, clip_norm=optimizer_clip_norm
         )
@@ -138,13 +249,24 @@ class SGDRF(pyro.contrib.gp.Parameterized):
 
         self.n_xs = 0
 
-    @staticmethod
-    def entropy(x: torch.Tensor) -> torch.Tensor:
-        p = torch.div(x, torch.linalg.vector_norm(x, ord=1, dim=-1, keepdim=True))
-        sij = -p * torch.log(p)
-        return torch.sum(sij, dim=-2)
+    def subsample(self, t: Optional[int] = None) -> torch.Tensor:
+        """Generates a subsampling index tensor
 
-    def subsample(self, t=None):
+        Parameters
+        ----------
+        t : Optional[int], optional
+            The index to use as `most recent` for sampling, by default self.xs.size(0) - 1
+
+        Returns
+        -------
+        torch.Tensor
+            A tensor representing the indices of the past observations chosen for this subsample
+
+        Raises
+        ------
+        ValueError
+            Raises a ValueError if the subsample type is invalid.
+        """
         n = self.subsample_n
         t = t if t is not None else self.xs.size(0) - 1
         if (self.subsample_type == "full") or (t <= n):
@@ -153,7 +275,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         rtp1 = torch.arange(t + 1, device=self.device)
         latest = normalize(
             torch.tensor(
-                [0 for _ in range(t)]
+                data=[0 for _ in range(t)]
                 + [
                     1,
                 ],
@@ -193,7 +315,19 @@ class SGDRF(pyro.contrib.gp.Parameterized):
             raise ValueError(f'invalid subsample_type "{self.subsample_type}"')
         return dist.Categorical(probs).sample([n])
 
-    def topic_prob(self, xs=None):
+    def topic_prob(self, xs: Optional[torch.Tensor] = None) -> torch.Tensor:
+        """Infer or predict topic probabilities
+
+        Parameters
+        ----------
+        xs : Optional[torch.Tensor], optional
+            The points to predict at, by default self.xs
+
+        Returns
+        -------
+        torch.Tensor
+            Topic probabilities at each point
+        """
         f_loc, _ = conditional(
             xs if xs is not None else self.xs,
             self.xu,
@@ -207,16 +341,46 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         topic_probs = torch.softmax(f_loc, -2).squeeze(-2)
         return topic_probs
 
-    def word_topic_prob(self):
+    def word_topic_prob(self) -> pyro.nn.module.PyroParam:
+        """Inferred word-topic probability matrix
+
+        Returns
+        -------
+        pyro.nn.module.PyroParam
+            The inferred word-topic probability matrix (MAP estimate)
+        """
         return self.word_topic_probs
 
-    def word_prob(self, xs=None):
+    def word_prob(self, xs: Optional[torch.Tensor] = None) -> torch.Tensor:
+        """Infer or predict word probabilities
+
+        Parameters
+        ----------
+        xs : Optional[torch.Tensor], optional
+            The points to predict at, by default self.xs
+
+        Returns
+        -------
+        torch.Tensor
+            Word probabilities at each point
+        """
         topic_probs = self.topic_prob(xs)
         word_topic_probs = self.word_topic_prob()
         return topic_probs.transpose(-2, -1) @ word_topic_probs
 
     @staticmethod
-    def check_inputs(xs=None, ws=None):
+    def check_inputs(
+        xs: Optional[torch.Tensor] = None, ws: Optional[torch.Tensor] = None
+    ):
+        """Check that input location and observation sizes agree in shape
+
+        Parameters
+        ----------
+        xs : Optional[torch.Tensor], optional
+            The input locations, by default None
+        ws : Optional[torch.Tensor], optional
+            The input observations, by default None
+        """
         if xs is None or ws is None:
             assert (xs is None) and (ws is None), "inputs do not agree"
         else:
@@ -224,54 +388,62 @@ class SGDRF(pyro.contrib.gp.Parameterized):
                 xs.size(0) == ws.size(0)
             ), "inputs do not agree"
 
-    def perplexity(self, xs=None, ws=None):
-        self.check_inputs(xs, ws)
-        xs = xs if xs is not None else self.xs
-        ws = ws if ws is not None else self.ws
-        return (
-            ((ws * self.word_prob(xs).log()).sum() / -ws.sum())
-            .exp()
-            .detach()
-            .cpu()
-            .item()
-        )
+    def process_inputs(
+        self, xs: Optional[torch.Tensor] = None, ws: Optional[torch.Tensor] = None
+    ):
+        """Ingest new observations
 
-    def process_inputs(self, xs=None, ws=None):
+        Parameters
+        ----------
+        xs : Optional[torch.Tensor], optional
+            New locations, by default None
+        ws : Optional[torch.Tensor], optional
+            New observations, by default None
+        """
         self.check_inputs(xs, ws)
-        if xs is not None:
-            self.xs = torch.cat((self.xs, xs), dim=0)
-            self.ws = torch.cat((self.ws, ws), dim=0)
+        if xs is not None and ws is not None:
+            self.xs = torch.cat([self.xs, xs], dim=0)
+            self.ws = torch.cat([self.ws, ws], dim=0)
             self.n_xs += self.xs.shape[0]
 
-    def get_step_args_kwargs(self):
-        args = [
-            self.xs,
-            self.ws,
-            self.xu,
-            self.uloc,
-            self.uscaletril,
-            self.subsample(),
-            self.dir_p,
-            self.lengthscale,
-            self.variance,
-            self.jitter,
-        ]
-        kwargs = dict(K=self.K, whiten=self.whiten, max_obs=self.max_obs)
-        return args, kwargs
+    def step(self) -> float:
+        """Take a single training step
 
-    def step(self):
+        Returns
+        -------
+        float
+            Training loss for this step
+
+        Raises
+        ------
+        ValueError
+            If `self.fail_on_nan_loss` is `True`, raise an error if `loss` is `NaN`
+        """
         loss = self.svi.step(self.xs, self.ws, self.subsample())
         if self.fail_on_nan_loss and pyro.util.torch_isnan(loss):
             raise ValueError("loss is NaN")
-        return loss
-
-    def dry_run(self, xs, ws):
-        self.check_inputs(xs, ws)
-        self.model(xs, ws, self.subsample())
-        self.guide(xs, ws, self.subsample())
+        return loss  # type: ignore
 
     @pyro_method
-    def model(self, xs, ws, subsample):
+    def model(
+        self, xs: torch.Tensor, ws: torch.Tensor, subsample: torch.Tensor
+    ) -> torch.Tensor:
+        """Stochastic variational inference prior and likelihood model
+
+        Parameters
+        ----------
+        xs : torch.Tensor
+            Locations of all observations
+        ws : torch.Tensor
+            Observed categorical data
+        subsample : torch.Tensor
+            Indices of past observations to use in this training step
+
+        Returns
+        -------
+        torch.Tensor
+            The observations
+        """
         self.set_mode("model")
         N = xs.size(0)
 
@@ -315,7 +487,18 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         return obs
 
     @pyro_method
-    def guide(self, xs, ws, subsample):
+    def guide(self, xs: torch.Tensor, ws: torch.Tensor, subsample: torch.Tensor):
+        """Stochastic variational inference approximate posterior
+
+        Parameters
+        ----------
+        xs : torch.Tensor
+            Locations of all observations
+        ws : torch.Tensor
+            Observed categorical data
+        subsample : torch.Tensor
+            Indices of past observations to use in this training step
+        """
         self.set_mode("guide")
         self._load_pyro_samples()
 
@@ -329,6 +512,18 @@ class SGDRF(pyro.contrib.gp.Parameterized):
                 pyro.distributions.Delta(self.word_topic_probs).to_event(1),
             )
 
-    def forward(self, xs):
+    def forward(self, xs: torch.Tensor) -> torch.Tensor:
+        """Pytorch module interface for SGDRF model
+
+        Parameters
+        ----------
+        xs : torch.Tensor
+            Locations to generate observation probabilities at
+
+        Returns
+        -------
+        torch.Tensor
+            Observation probabilities
+        """
         self.set_mode("guide")
         return self.word_prob(xs)

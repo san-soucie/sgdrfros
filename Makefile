@@ -12,54 +12,61 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+PKG_DIR=$(shell pwd)
+SRC_DIR=$(shell dirname $(PKG_DIR))
+ROS2_WS=$(shell dirname $(SRC_DIR))
+
+
 BUILD_TYPE ?= "Release"
 
 .PHONY: pull clone-ros force-clone-ros clone-workspace-packages \
 update-workspace-packages rosdep-update install-rosdep-packages \
 build build-merge test clean purge reformat_uncrustify reformat_black \
-lint_uncrustify
-
-src:
-	mkdir -p src
+lint_uncrustify cd-ws docs
 
 pull:
 	vcs pull --nested
 
 clone-ros: src
-	vcs import src --input https://raw.githubusercontent.com/ros2/ros2/$(distro)/ros2.repos
+	cd ${ROS2_WS} && vcs import src --input https://raw.githubusercontent.com/ros2/ros2/$(distro)/ros2.repos
 
 force-clone-ros: src
-	vcs import src --force --input https://raw.githubusercontent.com/ros2/ros2/$(distro)/ros2.repos
+	cd ${ROS2_WS} && vcs import src --force --input https://raw.githubusercontent.com/ros2/ros2/$(distro)/ros2.repos
 
 clone-workspace-packages:
-	vcs import src < src/ros2.repos
+	vcs import ${SRC_DIR} &&  < ${SRC_DIR}/ros2.repos
 
 update-workspace-packages: 
-	vcs export src > src/ros2.repos
+	vcs export ${SRC_DIR} > ${SRC_DIR}/ros2.repos
 
 rosdep-update:
-	rosdep update
+	cd ${ROS2_WS} && rosdep update
 
 install-rosdep-packages: rosdep-update
-	rosdep install --from-paths src --ignore-src -y
+	cd ${ROS2_WS} && rosdep install --from-paths src --ignore-src -y
 
 build:
-	colcon build --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
+	cd ${ROS2_WS} && colcon build --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
 
 test:
-	if [ -f install/setup.sh ]; then . install/setup.sh; fi && colcon test && colcon test-result --verbose
+	cd ${ROS2_WS} && if [ -f install/setup.sh ]; then . install/setup.sh; fi && colcon test && colcon test-result --verbose
 
 clean:
-	colcon build --cmake-target clean
+	cd ${ROS2_WS} && colcon build --cmake-target clean
 
 purge:
-	rm -rf build install log && py3clean .
+	cd ${ROS2_WS} && rm -rf build install log site && py3clean .
 
 reformat_uncrustify:
-	ament_uncrustify --reformat src/
+	ament_uncrustify --reformat sgdrf
+	ament_uncrustify --reformat sgdrf_interfaces
 
 reformat_black:
-	black src/
+	black sgdrf
 
 lint_uncrustify:
-	ament_uncrustify src/"
+	ament_uncrustify sgdrf
+	ament_uncrustify sgdrf_interfaces
+
+docs:
+	cd sgdrf/docs && make html

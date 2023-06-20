@@ -1,6 +1,6 @@
-name: 'Test'
-description: 'Test using devcontainer'
+name: "Test"
+description: "Test using devcontainer"
 runs:
-  using: 'docker'
-  image: '../../../.devcontainer/Dockerfile'
+  using: "docker"
+  image: "ghcr.io/san-soucie/sgdrfros:latest"
   entrypoint: ".github/actions/test/run.sh"

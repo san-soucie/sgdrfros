@@ -27,7 +27,10 @@ from geometry_msgs.msg import Point
 import torch
 import pyro
 import pyro.util
-from .sgdrf import SGDRF, KernelType, SubsampleType, OptimizerType
+from .model import SGDRF
+from .kernel import KernelType
+from .subsample import SubsampleType
+from .optimizer import OptimizerType
 from typing import Any, Optional, Union
 import sys
 

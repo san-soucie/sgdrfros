@@ -1,32 +1,37 @@
 name: publish to gh pages
 
 on:
-  push:
-    branches:
+  workflow_run:
+    workflows: [ROS]
+    types:
+      - completed
+    branches: 
       - main
 
 jobs:
-  deploy:
+  build-and-deploy-documentation:
+    name: Build and deploy documentation to Github Pages
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-22.04
+    container: ghcr.io/san-soucie/sgdrfros:latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
+      # - name: Setup Python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: "3.10"
 
-      - name: Upgrade pip
-        run: python3 -m pip install --upgrade pip
+      # - name: Upgrade pip
+      #   run: python3 -m pip install --upgrade pip
 
-      - name: Install dependencies
-        run: python3 -m pip install sphinx
+      # - name: Install dependencies
+      #   run: python3 -m pip install sphinx
 
       - name: Build documentation
         run: |
-          sphinx-apidoc --no-toc --module-first -o autodoc src/sgdrf/sgdrf
-          sphinx-build docs site -b dirhtml
+          sphinx-build sgdrf/docs/source site -b html
 
       - name: Deploy documentation
         uses: peaceiris/actions-gh-pages@v3
