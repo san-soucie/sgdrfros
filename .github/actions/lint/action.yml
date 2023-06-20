@@ -2,5 +2,5 @@ name: "Lint"
 description: "Lint using devcontainer"
 runs:
   using: "docker"
-  image: "ghcr.io/san-soucie/sgdrfros:latest"
+  image: "ghcr.io/san-soucie/sgdrfros:main"
   entrypoint: ".github/actions/lint/run.sh"

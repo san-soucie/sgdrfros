@@ -43,7 +43,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    container: ghcr.io/san-soucie/sgdrfros:latest
+    container: ghcr.io/san-soucie/sgdrfros:main
     needs: build-and-push-image
     steps:
       - name: Checkout code
@@ -55,7 +55,7 @@ jobs:
     name: Lint (ament_${{ matrix.linter }})
     runs-on: ubuntu-latest
     needs: build-and-push-image
-    container: ghcr.io/san-soucie/sgdrfros:latest
+    container: ghcr.io/san-soucie/sgdrfros:main
     strategy:
       fail-fast: false
       matrix:
