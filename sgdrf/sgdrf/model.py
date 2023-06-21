@@ -27,7 +27,7 @@ import torch
 import torch.distributions
 import torch.distributions.constraints
 from torch.nn.functional import normalize
-from typing import Union, Collection, Optional, Type
+from typing import Union, Collection, Optional
 from .optimizer import OptimizerType
 from .kernel import KernelType
 from .subsample import SubsampleType
@@ -127,8 +127,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         Number of past observations to subsample in a single training step, as a tensor
     num_particles : int
         Number of parallel posterior latent samples to draw
-    objective_type : Type[pyro.infer.ELBO]
-        The class of the objective function being used during training
     objective : pyro.infer.ELBO
         The objective function used during training
     xs : torch.Tensor
@@ -231,8 +229,8 @@ class SGDRF(pyro.contrib.gp.Parameterized):
             self.subsample_n, dtype=torch.int, device=self.device
         )
         self.num_particles = num_particles
-        self.objective_type = pyro.infer.JitTrace_ELBO if jit else pyro.infer.Trace_ELBO
-        self.objective = self.objective_type(
+        objective_type = pyro.infer.JitTrace_ELBO if jit else pyro.infer.Trace_ELBO
+        self.objective = objective_type(
             num_particles=self.num_particles,
             vectorize_particles=True,
             max_plate_nesting=1,
