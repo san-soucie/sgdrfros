@@ -103,7 +103,6 @@ RUN colcon build --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE
 FROM dev
 
 COPY --from=build ${WORKSPACE}/install ${WORKSPACE}/install
-RUN rm -rf /usr/src/gmock /usr/src/gtest /usr/share/urdfdom
 RUN echo $'#!/bin/bash \n\
   set -e \n\
   # setup ros2 environment \n\
