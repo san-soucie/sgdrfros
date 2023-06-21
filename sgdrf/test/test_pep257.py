@@ -21,8 +21,17 @@ from ament_pep257.main import main
 def test_pep257():
     rc = main(
         argv=[
-            "--convention=numpy",
-            "--add-ignore=D100,D101,D102,D103,D104,CNL100,D213,D413",
+            "--convention",
+            "numpy",
+            "--add-ignore",
+            "D100",
+            "D101",
+            "D102",
+            "D103",
+            "D104",
+            "CNL100",
+            "D213",
+            "D413",
             "sgdrf",
         ]
     )
