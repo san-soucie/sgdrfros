@@ -8,6 +8,7 @@
 FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04 AS base
 
 ENV ROS_DISTRO=iron
+ENV APP_NAME=sgdrfros
 
 ENV DEBIAN_FRONTEND=noninteractive
 
