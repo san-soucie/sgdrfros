@@ -75,8 +75,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Set up autocompletion for user
-RUN echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
-  && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc
 
 RUN python3 -m pip install sphinx-rtd-theme bump2version
 
@@ -91,7 +89,6 @@ RUN echo $'#!/bin/bash \n\
   # setup ros2 environment \n\
   source "/opt/ros/iron/setup.bash" -- \n\
   exec "\$@" ' > /entrypoint.sh
-RUN echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> /home/ros/.bashrc
 ENTRYPOINT [ "/tini" "--" "/entrypoint.sh" ]
 
 FROM dev as build
@@ -111,5 +108,6 @@ RUN echo $'#!/bin/bash \n\
   # setup ros2 environment \n\
   source "/opt/ros/iron/setup.bash" -- \n\
   source "${WORKSPACE}/install/local_setup.bash" -- \n\
+  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash \n\
   exec "\$@" ' > /entrypoint.sh
 
