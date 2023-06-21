@@ -22,10 +22,14 @@ jobs:
         uses: ros-tooling/setup-ros@v0.6
         with:
           required-ros-distributions: iron
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
       - name: Cache pip
         uses: actions/cache@v2
         with:
-          path: ~/.cache/pip
+          path: ${{ steps.pip-cache.outputs.dir }}
           key: ${{ hashFiles('sgdrf/setup.py') }}
 
       - name: Run ROS ci
@@ -41,8 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        linter:
-          [cppcheck, cpplint, uncrustify, lint_cmake, xmllint, flake8, pep257]
+        linter: [cppcheck, cpplint, uncrustify, lint_cmake, xmllint, flake8]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -50,3 +53,14 @@ jobs:
         uses: ./.github/actions/lint/
         env:
           LINTER: ${{ matrix.linter }}
+  lint_pep257:
+    name: Lint (ament_pep257)
+    runs-on: ubuntu-latest
+    needs: build-and-push-image
+    container: ghcr.io/san-soucie/sgdrfros:main
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run linter
+        run: |
+          ament_pep257 --convention numpy sgdrf--add-ignore D100 D101 D102 D103 D104 CNL100 D213 D413 D419
