@@ -106,8 +106,7 @@ COPY --from=build ${WORKSPACE}/install ${WORKSPACE}/install
 RUN echo $'#!/bin/bash \n\
   set -e \n\
   # setup ros2 environment \n\
-  source "/opt/ros/iron/setup.bash" -- \n\
-  source "${WORKSPACE}/install/local_setup.bash" -- \n\
+  source "${WORKSPACE}/install/setup.bash" -- \n\
   source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash \n\
   exec "\$@" ' > /entrypoint.sh
 
