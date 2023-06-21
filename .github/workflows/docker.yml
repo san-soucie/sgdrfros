@@ -31,7 +31,7 @@ jobs:
         run: |
           echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
       - name: Make pip cache dir, if required
-        id: pip-cache
+        id: make-pip-cache-dir
         run: |
           mkdir -p ${{ steps.pip-cache.outputs.dir }}
       - name: Cache pip
