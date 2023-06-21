@@ -26,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-      - name: Cache pip 
+      - name: Cache pip
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip

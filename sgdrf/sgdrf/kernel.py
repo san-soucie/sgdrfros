@@ -13,9 +13,10 @@
 # limitations under the License.
 
 from enum import Enum, auto
+from typing import Optional
+
 import pyro.contrib.gp.kernels as kernels
 from torch import Tensor
-from typing import Optional
 
 
 class KernelType(Enum):
@@ -39,8 +40,7 @@ class KernelType(Enum):
         variance: Tensor,
         active_dims: Optional[list[int]] = None,
     ) -> kernels.Isotropy:
-        """
-        Instantiate the kernel.
+        """Instantiate the kernel.
 
         Parameters
         ----------
@@ -57,7 +57,6 @@ class KernelType(Enum):
         -------
         kernels.Isotropy
             The instantiated kernel
-
         """
         return getattr(kernels, self._name_)(
             input_dim=input_dim,

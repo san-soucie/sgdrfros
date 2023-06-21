@@ -1,7 +1,7 @@
 # from: https://github.com/athackst/dockerfiles
 
 ###########################################
-# Base image 
+# Base image
 ###########################################
 FROM osrf/ros:iron-desktop-full-jammy as dev
 
@@ -24,7 +24,7 @@ ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 # Install timezone
 # Update packages
 # Install common programs
-RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \ 
+RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && apt-get update \
   && apt-get upgrade -y \
   && apt-get install -y \
@@ -96,9 +96,11 @@ FROM dev as build
 ARG WORKSPACE=/workspaces
 ARG BUILD_TYPE=release
 
-COPY . ${WORKSPACE}/src/${APP_NAME}
+COPY ./sgdrf ${WORKSPACE}/src/${APP_NAME}/sgdrf
+COPY ./sgdrf_interfaces ${WORKSPACE}/src/${APP_NAME}/sgdrf_interfaces
+
 RUN rosdep update && rosdep install --from-paths src --ignore-src -y
-RUN colcon build --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
+RUN colcon build --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
 
 FROM dev
 
@@ -109,4 +111,3 @@ RUN echo $'#!/bin/bash \n\
   source "${WORKSPACE}/install/setup.bash" -- \n\
   source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash \n\
   exec "\$@" ' > /entrypoint.sh
-

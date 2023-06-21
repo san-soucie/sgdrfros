@@ -12,32 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Collection, Optional, Union
+
 import pyro
+import pyro.contrib
 import pyro.distributions as dist
 import pyro.distributions.util
 import pyro.infer
-import pyro.contrib
+import pyro.nn.module
 import pyro.optim
 import pyro.util
-from pyro.contrib.gp.util import conditional
-import pyro.nn.module
-from pyro.nn.module import PyroParam, pyro_method
-
 import torch
 import torch.distributions
 import torch.distributions.constraints
+from pyro.contrib.gp.util import conditional
+from pyro.nn.module import PyroParam, pyro_method
 from torch.nn.functional import normalize
-from typing import Union, Collection, Optional
-from .optimizer import OptimizerType
+
 from .kernel import KernelType
+from .optimizer import OptimizerType
 from .subsample import SubsampleType
 
 EPSILON = 1e-2
 
 
 class SGDRF(pyro.contrib.gp.Parameterized):
-    """
-    Streaming Gaussian Dirichlet Random Field model.
+    """Streaming Gaussian Dirichlet Random Field model.
 
     Parameters
     ----------
@@ -143,7 +143,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         Whether or not to raise an exception if training loss is NaN
     n_xs : bool
         The number of past observation locations
-
     """
 
     def __init__(
@@ -170,7 +169,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         num_particles: int = 1,
         jit: bool = False,
     ):
-        """ """
+        """"""
         super().__init__()
 
         xu_dims = []
@@ -253,8 +252,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         self.n_xs = 0
 
     def subsample(self, t: Optional[int] = None) -> torch.Tensor:
-        """
-        Generate a subsampling index tensor.
+        """Generate a subsampling index tensor.
 
         Parameters
         ----------
@@ -270,7 +268,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         ------
         ValueError
             Raises a ValueError if the subsample type is invalid.
-
         """
         n = self.subsample_n
         t = t if t is not None else self.xs.size(0) - 1
@@ -321,8 +318,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         return dist.Categorical(probs).sample([n])
 
     def topic_prob(self, xs: Optional[torch.Tensor] = None) -> torch.Tensor:
-        """
-        Infer or predict topic probabilities.
+        """Infer or predict topic probabilities.
 
         Parameters
         ----------
@@ -333,7 +329,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         -------
         torch.Tensor
             Topic probabilities at each point
-
         """
         f_loc, _ = conditional(
             xs if xs is not None else self.xs,
@@ -349,20 +344,17 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         return topic_probs
 
     def word_topic_prob(self) -> pyro.nn.module.PyroParam:
-        """
-        Get the inferred word-topic probability matrix.
+        """Get the inferred word-topic probability matrix.
 
         Returns
         -------
         pyro.nn.module.PyroParam
             The inferred word-topic probability matrix (MAP estimate)
-
         """
         return self.word_topic_probs
 
     def word_prob(self, xs: Optional[torch.Tensor] = None) -> torch.Tensor:
-        """
-        Infer or predict word probabilities.
+        """Infer or predict word probabilities.
 
         Parameters
         ----------
@@ -373,7 +365,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         -------
         torch.Tensor
             Word probabilities at each point
-
         """
         topic_probs = self.topic_prob(xs)
         word_topic_probs = self.word_topic_prob()
@@ -383,8 +374,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
     def check_inputs(
         xs: Optional[torch.Tensor] = None, ws: Optional[torch.Tensor] = None
     ):
-        """
-        Check that input location and observation sizes agree in shape.
+        """Check that input location and observation sizes agree in shape.
 
         Parameters
         ----------
@@ -392,7 +382,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
             The input locations, by default None
         ws : Optional[torch.Tensor], optional
             The input observations, by default None
-
         """
         if xs is None or ws is None:
             assert (xs is None) and (ws is None), "inputs do not agree"
@@ -404,8 +393,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
     def process_inputs(
         self, xs: Optional[torch.Tensor] = None, ws: Optional[torch.Tensor] = None
     ):
-        """
-        Ingest new observations.
+        """Ingest new observations.
 
         Parameters
         ----------
@@ -413,7 +401,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
             New locations, by default None
         ws : Optional[torch.Tensor], optional
             New observations, by default None
-
         """
         self.check_inputs(xs, ws)
         if xs is not None and ws is not None:
@@ -422,8 +409,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
             self.n_xs += self.xs.shape[0]
 
     def step(self) -> float:
-        """
-        Take a single training step.
+        """Take a single training step.
 
         Returns
         -------
@@ -434,7 +420,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         ------
         ValueError
             If `self.fail_on_nan_loss` is `True`, raise an error if `loss` is `NaN`
-
         """
         loss = self.svi.step(self.xs, self.ws, self.subsample())
         if self.fail_on_nan_loss and pyro.util.torch_isnan(loss):
@@ -445,8 +430,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
     def model(
         self, xs: torch.Tensor, ws: torch.Tensor, subsample: torch.Tensor
     ) -> torch.Tensor:
-        """
-        Run the stochastic variational inference prior and likelihood model.
+        """Run the stochastic variational inference prior and likelihood model.
 
         Parameters
         ----------
@@ -461,7 +445,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         -------
         torch.Tensor
             The observations
-
         """
         self.set_mode("model")
         N = xs.size(0)
@@ -507,8 +490,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
 
     @pyro_method
     def guide(self, xs: torch.Tensor, ws: torch.Tensor, subsample: torch.Tensor):
-        """
-        Run the stochastic variational inference approximate posterior.
+        """Run the stochastic variational inference approximate posterior.
 
         Parameters
         ----------
@@ -518,7 +500,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
             Observed categorical data
         subsample : torch.Tensor
             Indices of past observations to use in this training step
-
         """
         self.set_mode("guide")
         self._load_pyro_samples()
@@ -534,8 +515,7 @@ class SGDRF(pyro.contrib.gp.Parameterized):
             )
 
     def forward(self, xs: torch.Tensor) -> torch.Tensor:
-        """
-        Produce word probabilities at a given set of locations.
+        """Produce word probabilities at a given set of locations.
 
         Parameters
         ----------
@@ -546,7 +526,6 @@ class SGDRF(pyro.contrib.gp.Parameterized):
         -------
         torch.Tensor
             Observation probabilities
-
         """
         self.set_mode("guide")
         return self.word_prob(xs)

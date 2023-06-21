@@ -36,7 +36,7 @@ force-clone-ros: src
 clone-workspace-packages:
 	vcs import ${SRC_DIR} &&  < ${SRC_DIR}/ros2.repos
 
-update-workspace-packages: 
+update-workspace-packages:
 	vcs export ${SRC_DIR} > ${SRC_DIR}/ros2.repos
 
 rosdep-update:

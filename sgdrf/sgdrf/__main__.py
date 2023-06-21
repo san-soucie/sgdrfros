@@ -12,27 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+from typing import Any, Optional, Union
+
+import pyro
+import pyro.util
 import rclpy
 import rclpy.node
+import torch
+from geometry_msgs.msg import Point
 from rcl_interfaces.msg import (
-    ParameterDescriptor,
     FloatingPointRange,
     IntegerRange,
+    ParameterDescriptor,
     ParameterType,
 )
 from sgdrf_interfaces.msg import CategoricalObservation
 from sgdrf_interfaces.srv import TopicProb, WordProb, WordTopicMatrix
 from std_msgs.msg import Float64
-from geometry_msgs.msg import Point
-import torch
-import pyro
-import pyro.util
-from .model import SGDRF
+
 from .kernel import KernelType
-from .subsample import SubsampleType
+from .model import SGDRF
 from .optimizer import OptimizerType
-from typing import Any, Optional, Union
-import sys
+from .subsample import SubsampleType
 
 RANGETYPE = tuple[Union[int, float], Union[int, float], Union[int, float]]
 

@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .model import SGDRF
 from .kernel import KernelType
-from .subsample import SubsampleType
+from .model import SGDRF
 from .optimizer import OptimizerType
+from .subsample import SubsampleType
 
 __all__ = ["SGDRF", "KernelType", "SubsampleType", "OptimizerType"]

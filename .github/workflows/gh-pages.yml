@@ -5,7 +5,7 @@ on:
     workflows: [ROS]
     types:
       - completed
-    branches: 
+    branches:
       - main
 
 jobs:
