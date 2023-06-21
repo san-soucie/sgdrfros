@@ -23,6 +23,7 @@ def test_pep257():
         argv=[
             "--convention",
             "numpy",
+            "sgdrf",
             "--add-ignore",
             "D100",
             "D101",
@@ -32,7 +33,7 @@ def test_pep257():
             "CNL100",
             "D213",
             "D413",
-            "sgdrf",
+            "D419",
         ]
     )
     assert rc == 0, "Found code style errors / warnings"

@@ -22,6 +22,12 @@ jobs:
         uses: ros-tooling/setup-ros@v0.6
         with:
           required-ros-distributions: iron
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ hashFiles('sgdrf/setup.py') }}
+
       - name: Run ROS ci
         uses: ros-tooling/action-ros-ci@v0.3
         with:
