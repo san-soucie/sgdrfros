@@ -19,9 +19,7 @@ from typing import Optional
 
 
 class KernelType(Enum):
-    """
-    A wrapper for ::py:class:`pyro.contrib.gp.kernels.Isotropy` kernels.
-    """
+    """A wrapper for ::py:class:`pyro.contrib.gp.kernels.Isotropy` kernels."""
 
     RBF = auto()
     """::py:class:`pyro.contrib.gp.kernels.RBF`"""
@@ -41,7 +39,8 @@ class KernelType(Enum):
         variance: Tensor,
         active_dims: Optional[list[int]] = None,
     ) -> kernels.Isotropy:
-        """Instantiate the kernel.
+        """
+        Instantiate the kernel.
 
         Parameters
         ----------
@@ -58,6 +57,7 @@ class KernelType(Enum):
         -------
         kernels.Isotropy
             The instantiated kernel
+
         """
         return getattr(kernels, self._name_)(
             input_dim=input_dim,

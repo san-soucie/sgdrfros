@@ -25,8 +25,8 @@ class SubsampleType(Flag):
     exponential = auto()
     """Sample with probability proportional to :math:`exp[{\\alpha}(t-{\\tau})]`"""
     exponential_plus_uniform = exponential | uniform
-    """Sample with probabilities representing a weighted sum of exponential and uniform strategies"""
+    """Sample with probabilities representing a weighted sum of exponential & uniform strategies"""
     exponential_plus_latest = exponential | latest
-    """Sample with probabilities representing a weighted sum of exponential and latest strategies"""
+    """Sample with probabilities representing a weighted sum of exponential & latest strategies"""
     uniform_plus_latest = uniform | latest
-    """Sample with probabilities representing a weighted sum of uniform and latest strategies"""
+    """Sample with probabilities representing a weighted sum of uniform & latest strategies"""

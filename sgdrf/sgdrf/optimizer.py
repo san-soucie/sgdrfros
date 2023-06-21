@@ -18,7 +18,7 @@ from pyro.optim import PyroOptim
 
 
 class OptimizerType(Enum):
-    """A wrapper for ::py:class:`pyro.optim.PyroOptim` optimizers"""
+    """A wrapper for ::py:class:`pyro.optim.PyroOptim` optimizers."""
 
     Adadelta = auto()
     """::py:class:`pyro.optim.Adadelta`"""
@@ -34,7 +34,8 @@ class OptimizerType(Enum):
     """::py:class:`pyro.optim.SGD`"""
 
     def instantiate(self, lr: float = 0.001, clip_norm: float = 10.0) -> PyroOptim:
-        """Instantiates the optimizer
+        """
+        Instantiate the optimizer.
 
         Parameters
         ----------
@@ -47,6 +48,7 @@ class OptimizerType(Enum):
         -------
         PyroOptim
             The instantiated optimizer
+
         """
         return getattr(optim, self._name_)(
             {"lr": lr}, clip_args={"clip_norm": clip_norm}
