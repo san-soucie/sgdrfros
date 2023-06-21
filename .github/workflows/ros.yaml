@@ -9,6 +9,9 @@ jobs:
   build-and-push-image:
     name: Build and push Docker image to Github container registry
     uses: ./.github/workflows/docker.yml
+    permissions:
+      contents: read
+      packages: write
   test:
     name: Test
     runs-on: ubuntu-latest
