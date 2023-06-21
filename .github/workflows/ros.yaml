@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir -p ${{ steps.pip-cache.outputs.dir }}
       - name: Cache pip
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: ${{ hashFiles('requirements.txt') }}-${{ hashFiles('dev.requirements.txt') }}
