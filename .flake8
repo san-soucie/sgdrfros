@@ -1,4 +1,7 @@
 [flake8]
 max-line-length = 88
 select = C,E,F,W,B,B950
-extend-ignore = E203, E501, W503
+extend-ignore = E203, E501, W503, Q000,I100,I101,I201,D419
+per-file-ignores =
+        sgdrf/docs/source/conf.py: A001
+        sgdrf/sgdrf/__main__.py: A002,CNL100
