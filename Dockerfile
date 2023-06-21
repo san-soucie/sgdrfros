@@ -83,6 +83,10 @@ RUN --mount=type=cache,target=/root/.cache/pip,from=pip_cache python3 -m pip ins
 
 RUN rosdep init || echo "rosdep already initialized"
 
+ARG WORKSPACE=/ros2_ws
+RUN mkdir -p ${WORKSPACE}/src
+WORKDIR ${WORKSPACE}
+
 ARG USERNAME=ros
 ARG USER_UID=10000
 ARG USER_GID=10001
@@ -158,13 +162,13 @@ ENV QT_X11_NO_MITSHM 1
 
 FROM dev as build
 
-ARG WORKSPACE=/workspaces
 ARG BUILD_TYPE=release
 
-COPY ./sgdrf ${WORKSPACE}/src/${APP_NAME}/sgdrf
-COPY ./sgdrf_interfaces ${WORKSPACE}/src/${APP_NAME}/sgdrf_interfaces
+COPY ./sgdrf src/${APP_NAME}/sgdrf
+COPY ./sgdrf_interfaces src/${APP_NAME}/sgdrf_interfaces
 
-RUN --mount=type=cache,target=/root/.cache/pip,from=pip_cache rosdep update && rosdep install --from-paths src --ignore-src -y
+RUN bash -c 'echo "yaml https://raw.githubusercontent.com/san-soucie/rosdistro/python-pyro-ppl-pip/rosdep/python.yaml" > /etc/ros/rosdep/sources.list.d/10-python-pyro-ppl-pip.list'
+RUN --mount=type=cache,target=/root/.cache/pip,from=pip_cache rosdep update && ls && rosdep install --from-paths src --ignore-src -y
 RUN colcon build --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
 
 FROM gazebo-nvidia
