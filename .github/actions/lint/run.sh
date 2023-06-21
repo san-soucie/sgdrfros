@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-ament_${LINTER} src/
+ament_${LINTER} .
