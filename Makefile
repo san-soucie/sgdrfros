@@ -49,7 +49,7 @@ build:
 	cd ${ROS2_WS} && colcon build --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
 
 test:
-	cd ${ROS2_WS} && if [ -f install/setup.sh ]; then . install/setup.sh; fi && colcon test && colcon test-result --verbose
+	cd ${ROS2_WS} && colcon test && colcon test-result --verbose
 
 clean:
 	cd ${ROS2_WS} && colcon build --cmake-target clean
