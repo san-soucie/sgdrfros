@@ -1,95 +1,159 @@
-# from: https://github.com/athackst/dockerfiles
+##############################################
+# Created from template ros2.dockerfile.jinja
+##############################################
 
 ###########################################
 # Base image
 ###########################################
-FROM osrf/ros:iron-desktop-full-jammy as dev
+FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04 AS base
 
-LABEL org.opencontainers.image.source="https://github.com/san-soucie/sgdrfros"
+ENV ROS_DISTRO=iron
 
-ENV APP_NAME=sgdrfros
-ENV ROS_DISTRO=IRON
 ENV DEBIAN_FRONTEND=noninteractive
-ENV AMENT_PREFIX_PATH=/opt/ros/iron
-ENV COLCON_PREFIX_PATH=/opt/ros/iron
-ENV LD_LIBRARY_PATH=/opt/ros/iron/lib
-ENV PATH=/opt/ros/iron/bin:$PATH
-ENV PYTHONPATH=/opt/ros/iron/lib/python3.10/site-packages
-ENV ROS_PYTHON_VERSION=3
-ENV ROS_VERSION=2
-ENV LANG en_US.UTF-8
-ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
 # Install language
-# Install timezone
-# Update packages
-# Install common programs
-RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
-  && apt-get update \
-  && apt-get upgrade -y \
-  && apt-get install -y \
-  tzdata \
+RUN apt-get update && apt-get install -y \
   locales \
+  && locale-gen en_US.UTF-8 \
+  && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
+  && rm -rf /var/lib/apt/lists/*
+ENV LANG en_US.UTF-8
+
+# Install timezone
+RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
+  && export DEBIAN_FRONTEND=noninteractive \
+  && apt-get update \
+  && apt-get install -y tzdata \
+  && dpkg-reconfigure --frontend noninteractive tzdata \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get -y upgrade \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install common programs
+RUN apt-get update && apt-get install -y --no-install-recommends \
   curl \
   gnupg2 \
   lsb-release \
   sudo \
   software-properties-common \
   wget \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install ROS2
+RUN sudo add-apt-repository universe \
+  && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null \
+  && apt-get update && apt-get install -y --no-install-recommends \
+  ros-${ROS_DISTRO}-ros-base \
+  python3-argcomplete \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV AMENT_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
+ENV COLCON_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
+ENV LD_LIBRARY_PATH=/opt/ros/${ROS_DISTRO}/lib
+ENV PATH=/opt/ros/${ROS_DISTRO}/bin:$PATH
+ENV PYTHONPATH=/opt/ros/${ROS_DISTRO}/lib/python3.10/site-packages
+ENV ROS_PYTHON_VERSION=3
+ENV ROS_VERSION=2
+ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Develop image
+###########################################
+FROM base AS dev
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
   bash-completion \
   build-essential \
   cmake \
   gdb \
   git \
-  git-core \
-  sudo \
   openssh-client \
   python3-argcomplete \
   python3-pip \
   ros-dev-tools \
   vim \
-  python3-sphinx \
-  tini \
-  cmake \
-  git \
-  python3-setuptools  \
-  python3-bloom  \
-  python3-colcon-common-extensions  \
-  python3-rosdep  \
-  python3-vcstool  \
-  && locale-gen en_US.UTF-8 \
-  && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
-  && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-# Initialize rosdep, if required
+COPY dev.requirements.txt /dev.requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip,from=pip_cache python3 -m pip install -r /dev.requirements.txt && rm /dev.requirements.txt
+
 RUN rosdep init || echo "rosdep already initialized"
 
-# Create a non-root user
 ARG USERNAME=ros
 ARG USER_UID=10000
 ARG USER_GID=10001
+
+# Create a non-root user
 RUN groupadd --gid $USER_GID $USERNAME \
   && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
+  # Add sudo support for the non-root user
+  && apt-get update \
+  && apt-get install -y sudo \
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-  && chmod 0440 /etc/sudoers.d/$USERNAME
+  && chmod 0440 /etc/sudoers.d/$USERNAME \
+  && rm -rf /var/lib/apt/lists/*
 
 # Set up autocompletion for user
-
-RUN python3 -m pip install sphinx-rtd-theme bump2version
+RUN apt-get update && apt-get install -y git-core bash-completion \
+  && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
+  && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
+  && rm -rf /var/lib/apt/lists/*
 
 ENV DEBIAN_FRONTEND=
+ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
-ARG WORKSPACE=/workspaces
-RUN mkdir -p ${WORKSPACE}/src
-WORKDIR ${WORKSPACE}
-RUN bash -c 'echo "yaml https://raw.githubusercontent.com/san-soucie/rosdistro/python-pyro-ppl-pip/rosdep/python.yaml" > /etc/ros/rosdep/sources.list.d/10-python-pyro-ppl-pip.list'
-RUN echo $'#!/bin/bash \n\
-  set -e \n\
-  # setup ros2 environment \n\
-  source "/opt/ros/iron/setup.bash" -- \n\
-  exec "\$@" ' > /entrypoint.sh
-ENTRYPOINT [ "/tini" "--" "/entrypoint.sh" ]
+###########################################
+#  Full image
+###########################################
+FROM dev AS full
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install the full release
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ros-${ROS_DISTRO}-desktop \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full+Gazebo image
+###########################################
+FROM full AS gazebo
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install gazebo
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+  && apt-get update && apt-get install -q -y --no-install-recommends \
+  ros-${ROS_DISTRO}-gazebo* \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full+Gazebo+Nvidia image
+###########################################
+
+FROM gazebo AS gazebo-nvidia
+
+################
+# Expose the nvidia driver to allow opengl
+# Dependencies for glvnd and X11.
+################
+RUN apt-get update \
+  && apt-get install -y -qq --no-install-recommends \
+  libglvnd0 \
+  libgl1 \
+  libglx0 \
+  libegl1 \
+  libxext6 \
+  libx11-6
+
+# Env vars for the nvidia-container-runtime.
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
+ENV QT_X11_NO_MITSHM 1
 
 FROM dev as build
 
@@ -99,12 +163,14 @@ ARG BUILD_TYPE=release
 COPY ./sgdrf ${WORKSPACE}/src/${APP_NAME}/sgdrf
 COPY ./sgdrf_interfaces ${WORKSPACE}/src/${APP_NAME}/sgdrf_interfaces
 
-RUN rosdep update && rosdep install --from-paths src --ignore-src -y
+RUN --mount=type=cache,target=/root/.cache/pip,from=pip_cache rosdep update && rosdep install --from-paths src --ignore-src -y
 RUN colcon build --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
 
-FROM dev
+FROM gazebo-nvidia
 
 COPY --from=build ${WORKSPACE}/install ${WORKSPACE}/install
+COPY requirements.txt /requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip,from=pip_cache python3 -m pip install -r /requirements.txt && rm /requirements.txt
 RUN echo $'#!/bin/bash \n\
   set -e \n\
   # setup ros2 environment \n\

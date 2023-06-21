@@ -29,12 +29,12 @@ jobs:
       - name: Get pip cache dir
         id: pip-cache
         run: |
-          echo "::set-output name=dir::$(pip cache dir)"
+          echo "dir=$(pip cache dir)"
       - name: Cache pip
         uses: actions/cache@v2
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ hashFiles('sgdrf/setup.py') }}
+          key: ${{ hashFiles('requirements.txt') }}-${{ hashFiles('dev.requirements.txt') }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
@@ -54,6 +54,7 @@ jobs:
         with:
           context: .
           push: true
+          build-contexts: pip_cache=${{steps.pip-cache.outputs.dir}}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
