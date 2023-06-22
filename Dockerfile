@@ -64,8 +64,6 @@ ARG WORKSPACE=/ros2_ws
 RUN mkdir -p ${WORKSPACE}/src
 WORKDIR ${WORKSPACE}
 
-RUN rosdep init || echo "rosdep already initialized"
-
 ARG USERNAME=ros
 ARG USER_UID=10000
 ARG USER_GID=10001
@@ -103,6 +101,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY dev.requirements.txt /dev.requirements.txt
 RUN python3 -m pip install --no-cache-dir -r /dev.requirements.txt && rm /dev.requirements.txt
+
+RUN rosdep init || echo "rosdep already initialized"
 
 # Set up autocompletion for user
 RUN apt-get update && apt-get install -y git-core bash-completion \
