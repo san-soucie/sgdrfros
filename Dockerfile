@@ -5,7 +5,7 @@
 ###########################################
 # Base image
 ###########################################
-FROM ubuntu22.04 AS base
+FROM ubuntu:22.04 AS base
 
 ENV ROS_DISTRO=iron
 ENV APP_NAME=sgdrfros
