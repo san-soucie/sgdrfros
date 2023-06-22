@@ -16,7 +16,14 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout source
+        uses: actions/checkout@v2
+      - name: Add additional rosdep sources
+        env:
+          ROSDEP_REPO: https://raw.githubusercontent.com/san-soucie/rosdistro/python-pyro-ppl-pip
+          ROSDEP_FILE: /etc/ros/rosdep/sources.list.d/10-python-pyro-ppl-pip.list
+        run: |
+          echo "yaml ${ROSDEP_REPO}/rosdep/python.yaml" > ${ROSDEP_FILE}
       - name: Setup ROS tooling
         uses: ros-tooling/setup-ros@v0.6
         with:
