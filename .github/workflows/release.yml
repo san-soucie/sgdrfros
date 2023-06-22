@@ -17,7 +17,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build-and-push-image:
     name: Build and push Docker image to Github container registry
-    uses: ./.github/workflows/docker.yml
+    uses: san-soucie/sgdrfros/.github/workflows/docker.yml@main
     permissions:
       contents: read
       packages: write
