@@ -24,7 +24,8 @@ jobs:
           ROSDEP_DIR: /etc/ros/rosdep/sources.list.d
           ROSDEP_FILE: 10-python-pyro-ppl-pip.list
         run: |
-          mkdir -p ${ROSDEP_DIR}
+          sudo mkdir -p ${ROSDEP_DIR}
+          sudo chmod 777 ${ROSDEP_DIR}
           touch ${ROSDEP_DIR}/${ROSDEP_FILE}
           echo "yaml ${ROSDEP_REPO}/rosdep/python.yaml" > ${ROSDEP_DIR}/${ROSDEP_FILE}
       - name: Setup ROS tooling
