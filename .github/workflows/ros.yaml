@@ -18,16 +18,19 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+      - name: Add additional rosdep sources
+        env:
+          ROSDEP_REPO: https://raw.githubusercontent.com/san-soucie/rosdistro/python-pyro-ppl-pip
+          ROSDEP_DIR: /etc/ros/rosdep/sources.list.d
+          ROSDEP_FILE: 10-python-pyro-ppl-pip.list
+        run: |
+          mkdir -p ${ROSDEP_DIR}
+          touch ${ROSDEP_DIR}/${ROSDEP_FILE}
+          echo "yaml ${ROSDEP_REPO}/rosdep/python.yaml" > ${ROSDEP_DIR}/${ROSDEP_FILE}
       - name: Setup ROS tooling
         uses: ros-tooling/setup-ros@v0.6
         with:
           required-ros-distributions: iron
-      - name: Add additional rosdep sources
-        env:
-          ROSDEP_REPO: https://raw.githubusercontent.com/san-soucie/rosdistro/python-pyro-ppl-pip
-          ROSDEP_FILE: /etc/ros/rosdep/sources.list.d/10-python-pyro-ppl-pip.list
-        run: |
-          bash -c 'echo "yaml ${ROSDEP_REPO}/rosdep/python.yaml" > ${ROSDEP_FILE}'
       - name: Run ROS ci
         uses: ros-tooling/action-ros-ci@v0.3
         with:
