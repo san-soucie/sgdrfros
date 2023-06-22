@@ -8,7 +8,7 @@ on:
 jobs:
   build-and-push-image:
     name: Build and push Docker image to Github container registry
-    uses: ./.github/workflows/docker.yml
+    uses: san-soucie/sgdrfros/.github/workflows/docker.yml@main
     permissions:
       contents: read
       packages: write
@@ -22,19 +22,6 @@ jobs:
         uses: ros-tooling/setup-ros@v0.6
         with:
           required-ros-distributions: iron
-      - name: Get pip cache dir
-        id: pip-cache
-        run: |
-          echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
-      - name: Make pip cache dir, if required
-        id: make-pip-cache-dir
-        run: |
-          mkdir -p ${{ steps.pip-cache.outputs.dir }}
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ hashFiles('requirements.txt') }}-${{ hashFiles('dev.requirements.txt') }}
       - name: Run ROS ci
         uses: ros-tooling/action-ros-ci@v0.3
         with:

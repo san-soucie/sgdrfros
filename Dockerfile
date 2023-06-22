@@ -79,7 +79,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 COPY dev.requirements.txt /dev.requirements.txt
-RUN --mount=type=cache,target=/root/.cache/pip,from=pip_cache python3 -m pip install -r /dev.requirements.txt && rm /dev.requirements.txt
+RUN python3 -m pip install -r /dev.requirements.txt && rm /dev.requirements.txt
 
 RUN rosdep init || echo "rosdep already initialized"
 
@@ -168,14 +168,14 @@ COPY ./sgdrf src/${APP_NAME}/sgdrf
 COPY ./sgdrf_interfaces src/${APP_NAME}/sgdrf_interfaces
 
 RUN bash -c 'echo "yaml https://raw.githubusercontent.com/san-soucie/rosdistro/python-pyro-ppl-pip/rosdep/python.yaml" > /etc/ros/rosdep/sources.list.d/10-python-pyro-ppl-pip.list'
-RUN --mount=type=cache,target=/root/.cache/pip,from=pip_cache rosdep update && ls && rosdep install --from-paths src --ignore-src -y
+RUN rosdep update && ls && rosdep install --from-paths src --ignore-src -y
 RUN colcon build --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
 
 FROM gazebo-nvidia
 
 COPY --from=build ${WORKSPACE}/install ${WORKSPACE}/install
 COPY requirements.txt /requirements.txt
-RUN --mount=type=cache,target=/root/.cache/pip,from=pip_cache python3 -m pip install -r /requirements.txt && rm /requirements.txt
+RUN python3 -m pip install -r /requirements.txt && rm /requirements.txt
 RUN echo $'#!/bin/bash \n\
   set -e \n\
   # setup ros2 environment \n\
