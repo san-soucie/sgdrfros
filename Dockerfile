@@ -79,7 +79,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 COPY dev.requirements.txt /dev.requirements.txt
-RUN python3 -m pip install -r /dev.requirements.txt && rm /dev.requirements.txt
+RUN python3 -m pip install --no-cache-dir -r /dev.requirements.txt && rm /dev.requirements.txt
 
 RUN rosdep init || echo "rosdep already initialized"
 
@@ -171,7 +171,7 @@ RUN bash -c 'echo "yaml https://raw.githubusercontent.com/san-soucie/rosdistro/p
 RUN rosdep update && ls && rosdep install --from-paths src --ignore-src -y
 RUN colcon build --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
 
-FROM gazebo-nvidia
+FROM base
 
 COPY --from=build ${WORKSPACE}/install ${WORKSPACE}/install
 COPY requirements.txt /requirements.txt
