@@ -48,6 +48,7 @@ RUN sudo add-apt-repository universe \
   && apt-get update && apt-get install -y --no-install-recommends \
   ros-${ROS_DISTRO}-ros-base \
   python3-argcomplete \
+  python3-pip \
   && rm -rf /var/lib/apt/lists/*
 
 ENV AMENT_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
@@ -96,7 +97,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
   openssh-client \
   python3-argcomplete \
-  python3-pip \
   ros-dev-tools \
   vim \
   && rm -rf /var/lib/apt/lists/*
