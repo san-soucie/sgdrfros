@@ -167,7 +167,6 @@ ARG BUILD_TYPE=release
 COPY ./sgdrf src/${APP_NAME}/sgdrf
 COPY ./sgdrf_interfaces src/${APP_NAME}/sgdrf_interfaces
 
-RUN bash -c 'echo "yaml https://raw.githubusercontent.com/san-soucie/rosdistro/python-pyro-ppl-pip/rosdep/python.yaml" > /etc/ros/rosdep/sources.list.d/10-python-pyro-ppl-pip.list'
 RUN rosdep update && ls && rosdep install --from-paths src --ignore-src -y
 RUN colcon build --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
 
