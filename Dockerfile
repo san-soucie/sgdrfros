@@ -51,15 +51,6 @@ RUN sudo add-apt-repository universe \
   python3-pip \
   && rm -rf /var/lib/apt/lists/*
 
-ENV AMENT_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
-ENV COLCON_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
-ENV LD_LIBRARY_PATH=/opt/ros/${ROS_DISTRO}/lib
-ENV PATH=/opt/ros/${ROS_DISTRO}/bin:$PATH
-ENV PYTHONPATH=/opt/ros/${ROS_DISTRO}/lib/python3.10/site-packages
-ENV ROS_PYTHON_VERSION=3
-ENV ROS_VERSION=2
-ENV DEBIAN_FRONTEND=
-
 ARG WORKSPACE=/ros2_ws
 RUN mkdir -p ${WORKSPACE}/src
 WORKDIR ${WORKSPACE}
@@ -80,6 +71,17 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 COPY requirements.txt /requirements.txt
 RUN python3 -m pip install -r /requirements.txt && rm /requirements.txt
+
+ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
+ENV AMENT_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
+ENV COLCON_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
+ENV LD_LIBRARY_PATH=/opt/ros/${ROS_DISTRO}/lib
+ENV PATH=/opt/ros/${ROS_DISTRO}/bin:$PATH
+ENV PYTHONPATH=/opt/ros/${ROS_DISTRO}/lib/python3.10/site-packages
+ENV ROS_PYTHON_VERSION=3
+ENV ROS_VERSION=2
+ENV DEBIAN_FRONTEND=
+
 
 ###########################################
 #  Develop image
@@ -111,7 +113,6 @@ RUN apt-get update && apt-get install -y git-core bash-completion \
   && rm -rf /var/lib/apt/lists/*
 
 ENV DEBIAN_FRONTEND=
-ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
 FROM dev as build
 
