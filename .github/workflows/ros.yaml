@@ -27,7 +27,7 @@ jobs:
           ROSDEP_REPO: https://raw.githubusercontent.com/san-soucie/rosdistro/python-pyro-ppl-pip
           ROSDEP_FILE: /etc/ros/rosdep/sources.list.d/10-python-pyro-ppl-pip.list
         run: |
-          sudo echo "yaml ${ROSDEP_REPO}/rosdep/python.yaml" > ${ROSDEP_FILE}
+          bash -c 'echo "yaml ${ROSDEP_REPO}/rosdep/python.yaml" > ${ROSDEP_FILE}'
       - name: Run ROS ci
         uses: ros-tooling/action-ros-ci@v0.3
         with:
