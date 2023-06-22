@@ -63,6 +63,22 @@ ARG WORKSPACE=/ros2_ws
 RUN mkdir -p ${WORKSPACE}/src
 WORKDIR ${WORKSPACE}
 
+RUN rosdep init || echo "rosdep already initialized"
+
+ARG USERNAME=ros
+ARG USER_UID=10000
+ARG USER_GID=10001
+
+# Create a non-root user
+RUN groupadd --gid $USER_GID $USERNAME \
+  && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
+  # Add sudo support for the non-root user
+  && apt-get update \
+  && apt-get install -y sudo \
+  && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
+  && chmod 0440 /etc/sudoers.d/$USERNAME \
+  && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt /requirements.txt
 RUN python3 -m pip install -r /requirements.txt && rm /requirements.txt
 
@@ -87,22 +103,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY dev.requirements.txt /dev.requirements.txt
 RUN python3 -m pip install --no-cache-dir -r /dev.requirements.txt && rm /dev.requirements.txt
-
-RUN rosdep init || echo "rosdep already initialized"
-
-ARG USERNAME=ros
-ARG USER_UID=10000
-ARG USER_GID=10001
-
-# Create a non-root user
-RUN groupadd --gid $USER_GID $USERNAME \
-  && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-  # Add sudo support for the non-root user
-  && apt-get update \
-  && apt-get install -y sudo \
-  && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-  && chmod 0440 /etc/sudoers.d/$USERNAME \
-  && rm -rf /var/lib/apt/lists/*
 
 # Set up autocompletion for user
 RUN apt-get update && apt-get install -y git-core bash-completion \
