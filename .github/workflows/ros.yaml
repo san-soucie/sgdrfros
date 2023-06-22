@@ -15,7 +15,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    container: ghcr.io/san-soucie/sgdrfros:main
     steps:
       - uses: actions/checkout@v2
       - name: Setup ROS tooling
