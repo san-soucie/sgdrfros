@@ -59,6 +59,13 @@ ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
 ENV DEBIAN_FRONTEND=
 
+ARG WORKSPACE=/ros2_ws
+RUN mkdir -p ${WORKSPACE}/src
+WORKDIR ${WORKSPACE}
+
+COPY requirements.txt /requirements.txt
+RUN python3 -m pip install -r /requirements.txt && rm /requirements.txt
+
 ###########################################
 #  Develop image
 ###########################################
@@ -82,10 +89,6 @@ COPY dev.requirements.txt /dev.requirements.txt
 RUN python3 -m pip install --no-cache-dir -r /dev.requirements.txt && rm /dev.requirements.txt
 
 RUN rosdep init || echo "rosdep already initialized"
-
-ARG WORKSPACE=/ros2_ws
-RUN mkdir -p ${WORKSPACE}/src
-WORKDIR ${WORKSPACE}
 
 ARG USERNAME=ros
 ARG USER_UID=10000
@@ -118,14 +121,13 @@ COPY ./sgdrf src/${APP_NAME}/sgdrf
 COPY ./sgdrf_interfaces src/${APP_NAME}/sgdrf_interfaces
 
 RUN bash -c 'echo "yaml https://raw.githubusercontent.com/san-soucie/rosdistro/python-pyro-ppl-pip/rosdep/python.yaml" > /etc/ros/rosdep/sources.list.d/10-python-pyro-ppl-pip.list'
-RUN rosdep update && ls && rosdep install --from-paths src --ignore-src -y
+RUN rosdep update && rosdep install --from-paths src --ignore-src -y
 RUN colcon build --cmake-args "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic
 
 FROM base
 
 COPY --from=build ${WORKSPACE}/install ${WORKSPACE}/install
-COPY requirements.txt /requirements.txt
-RUN python3 -m pip install -r /requirements.txt && rm /requirements.txt
+
 RUN echo $'#!/bin/bash \n\
   set -e \n\
   # setup ros2 environment \n\
