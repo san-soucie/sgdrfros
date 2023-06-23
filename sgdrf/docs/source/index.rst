@@ -6,6 +6,7 @@ Welcome to SGDRFROS's documentation!
    :caption: Contents:
 
    sgdrf
+   contributing
    readme
    changelog
 
