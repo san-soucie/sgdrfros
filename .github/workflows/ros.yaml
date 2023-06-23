@@ -45,22 +45,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        linter: [cppcheck, cpplint, uncrustify, lint_cmake, xmllint, flake8]
+        linter: [cppcheck, cpplint, uncrustify, lint_cmake, xmllint, flake8, pep257]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Run linter
-        uses: ./.github/actions/lint/
-        env:
-          LINTER: ${{ matrix.linter }}
-  lint_pep257:
-    name: Lint (ament_pep257)
-    runs-on: ubuntu-latest
-    needs: build-and-push-image
-    container: ghcr.io/san-soucie/sgdrfros:main
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Run linter
+        if: ${{ matrix.linter != 'pep257'}}
+        run: |
+          ament_${{ matrix.linter}} .
+      - name: Run linter (pep257)
+        if: ${{ matrix.linter == 'pep257'}}
         run: |
           ament_pep257 --convention numpy sgdrf--add-ignore D100 D101 D102 D103 D104 CNL100 D213 D413 D419
