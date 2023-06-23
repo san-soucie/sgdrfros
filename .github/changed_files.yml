@@ -1,0 +1,14 @@
+sgdrf:
+  - sgdrf/sgdrf/**
+  - sgdrf/launch/**
+  - sgdrf/setup.py
+  - sgdrf/setup.cfg
+  - sgdrf/package.xml
+sgdrf_interfaces:
+  - sgdrf_interfaces/**
+repo:
+  - Dockerfile
+  - requirements.txt
+  - dev.requirements.txt
+github_workflows:
+  - .github/workflows/docker.yml
