@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sgdrf package &mdash; SGDRFROS 0.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Readme File" href="readme.html" />
+    <link rel="prev" title="Welcome to SGDRFROS’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SGDRFROS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">sgdrf package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sgdrf.SGDRF"><code class="docutils literal notranslate"><span class="pre">SGDRF</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.subsample"><code class="docutils literal notranslate"><span class="pre">SGDRF.subsample()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.topic_prob"><code class="docutils literal notranslate"><span class="pre">SGDRF.topic_prob()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.word_topic_prob"><code class="docutils literal notranslate"><span class="pre">SGDRF.word_topic_prob()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.word_prob"><code class="docutils literal notranslate"><span class="pre">SGDRF.word_prob()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.check_inputs"><code class="docutils literal notranslate"><span class="pre">SGDRF.check_inputs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.process_inputs"><code class="docutils literal notranslate"><span class="pre">SGDRF.process_inputs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.step"><code class="docutils literal notranslate"><span class="pre">SGDRF.step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.model"><code class="docutils literal notranslate"><span class="pre">SGDRF.model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.guide"><code class="docutils literal notranslate"><span class="pre">SGDRF.guide()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SGDRF.forward"><code class="docutils literal notranslate"><span class="pre">SGDRF.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sgdrf.KernelType"><code class="docutils literal notranslate"><span class="pre">KernelType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.KernelType.RBF"><code class="docutils literal notranslate"><span class="pre">KernelType.RBF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.KernelType.RationalQuadratic"><code class="docutils literal notranslate"><span class="pre">KernelType.RationalQuadratic</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.KernelType.Exponential"><code class="docutils literal notranslate"><span class="pre">KernelType.Exponential</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.KernelType.Matern32"><code class="docutils literal notranslate"><span class="pre">KernelType.Matern32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.KernelType.Matern52"><code class="docutils literal notranslate"><span class="pre">KernelType.Matern52</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.KernelType.instantiate"><code class="docutils literal notranslate"><span class="pre">KernelType.instantiate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sgdrf.SubsampleType"><code class="docutils literal notranslate"><span class="pre">SubsampleType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SubsampleType.latest"><code class="docutils literal notranslate"><span class="pre">SubsampleType.latest</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SubsampleType.uniform"><code class="docutils literal notranslate"><span class="pre">SubsampleType.uniform</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SubsampleType.exponential"><code class="docutils literal notranslate"><span class="pre">SubsampleType.exponential</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SubsampleType.exponential_plus_uniform"><code class="docutils literal notranslate"><span class="pre">SubsampleType.exponential_plus_uniform</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SubsampleType.exponential_plus_latest"><code class="docutils literal notranslate"><span class="pre">SubsampleType.exponential_plus_latest</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.SubsampleType.uniform_plus_latest"><code class="docutils literal notranslate"><span class="pre">SubsampleType.uniform_plus_latest</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sgdrf.OptimizerType"><code class="docutils literal notranslate"><span class="pre">OptimizerType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.OptimizerType.Adadelta"><code class="docutils literal notranslate"><span class="pre">OptimizerType.Adadelta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.OptimizerType.Adagrad"><code class="docutils literal notranslate"><span class="pre">OptimizerType.Adagrad</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.OptimizerType.Adam"><code class="docutils literal notranslate"><span class="pre">OptimizerType.Adam</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.OptimizerType.AdamW"><code class="docutils literal notranslate"><span class="pre">OptimizerType.AdamW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.OptimizerType.Adamax"><code class="docutils literal notranslate"><span class="pre">OptimizerType.Adamax</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.OptimizerType.SGD"><code class="docutils literal notranslate"><span class="pre">OptimizerType.SGD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sgdrf.OptimizerType.instantiate"><code class="docutils literal notranslate"><span class="pre">OptimizerType.instantiate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html#id1">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SGDRFROS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">sgdrf package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sgdrf.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-sgdrf">
+<span id="sgdrf-package"></span><h1>sgdrf package<a class="headerlink" href="#module-sgdrf" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="sgdrf.SGDRF">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sgdrf.</span></span><span class="sig-name descname"><span class="pre">SGDRF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xu_ns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_mins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_maxs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#sgdrf.KernelType" title="sgdrf.kernel.KernelType"><span class="pre">KernelType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">KernelType.Matern52</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_lengthscale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#sgdrf.OptimizerType" title="sgdrf.optimizer.OptimizerType"><span class="pre">OptimizerType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">OptimizerType.Adam</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_lr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_clip_norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.device" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">device</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#sgdrf.SubsampleType" title="sgdrf.subsample.SubsampleType"><span class="pre">SubsampleType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">SubsampleType.uniform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whiten</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail_on_nan_loss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgdrf.SGDRF" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.pyro.ai/en/stable/contrib.gp.html#pyro.contrib.gp.parameterized.Parameterized" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameterized</span></code></a></p>
+<p>Streaming Gaussian Dirichlet Random Field model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xu_ns</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Union[int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Collection[int]]</span></code>) – Number of inducing points, either one for each spatiotemporal dimension or a single number.</p></li>
+<li><p><strong>d_mins</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Collection[float]</span></code>) – A collection containing the minimum extent of each dimension</p></li>
+<li><p><strong>d_maxs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Collection[float]</span></code>) – A collection containing the maximum extent of each dimension</p></li>
+<li><p><strong>V</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of observation types</p></li>
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of latent Gaussian processes</p></li>
+<li><p><strong>max_obs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The maximum number of possible simultaneous categorical observations</p></li>
+<li><p><strong>dir_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) – Initial uniform Dirichlet hyperparameter</p></li>
+<li><p><strong>kernel_type</strong> (<a class="reference internal" href="#sgdrf.KernelType" title="sgdrf.KernelType"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelType</span></code></a>, <em>optional</em>) – Latent Gaussian process kernel type, by default KernelType.Matern52</p></li>
+<li><p><strong>kernel_lengthscale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <em>optional</em>) – Latent Gaussian process kernel lengthscale, by default 1.0</p></li>
+<li><p><strong>kernel_variance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <em>optional</em>) – Latent Gaussian process kernel variance, by default 1.0</p></li>
+<li><p><strong>optimizer_type</strong> (<a class="reference internal" href="#sgdrf.OptimizerType" title="sgdrf.OptimizerType"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizerType</span></code></a>, <em>optional</em>) – Stochastic gradient descent optimization algorithm, by default OptimizerType.Adam</p></li>
+<li><p><strong>optimizer_lr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <em>optional</em>) – Stochastic gradient descent optimization learning rate, by default 0.01</p></li>
+<li><p><strong>optimizer_clip_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <em>optional</em>) – Stochastic gradient descent optimization maximum gradient norm, by default 10.0</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.device" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code></a>, <em>optional</em>) – Pytorch device (e.g. <cite>torch.device(‘cuda’)</cite>), by default torch.device(“cpu”)</p></li>
+<li><p><strong>subsample_n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <em>optional</em>) – Number of past observations to subsample in a single training step, by default 1</p></li>
+<li><p><strong>subsample_type</strong> (<a class="reference internal" href="#sgdrf.SubsampleType" title="sgdrf.SubsampleType"><code class="xref py py-class docutils literal notranslate"><span class="pre">SubsampleType</span></code></a>, <em>optional</em>) – Subsampling strategy to use, by default SubsampleType.uniform</p></li>
+<li><p><strong>subsample_params</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[dict[str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float]]</span></code>, <em>optional</em>) – A dictionary containing the subsample parameters <cite>exponential</cite> and <cite>weight</cite>,
+by default <cite>{“exponential”: 0.1, “weight”: 0.5}</cite></p></li>
+<li><p><strong>whiten</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <em>optional</em>) – Whether the Gaussian process covariance matrix is whitened, by default False</p></li>
+<li><p><strong>fail_on_nan_loss</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <em>optional</em>) – Whether or not to raise an exception if training loss is NaN, by default True</p></li>
+<li><p><strong>num_particles</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <em>optional</em>) – Number of parallel posterior latent samples to draw, by default 1</p></li>
+<li><p><strong>jit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <em>optional</em>) – Whether or not to JIT-compile the model and guide, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>xu</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Sparse inducing points</p></li>
+<li><p><strong>dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of spatiotemporal dimensions for this model</p></li>
+<li><p><strong>V</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of observation types</p></li>
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of latent Gaussian processes</p></li>
+<li><p><strong>M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of inducing points</p></li>
+<li><p><strong>latent_shape</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple[int]</span></code>) – The Pyro shape of the latent Gaussian processes</p></li>
+<li><p><strong>max_obs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The maximum number of possible simultaneous categorical observations</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.device" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code></a>) – Pytorch device (e.g. <cite>torch.device(‘cuda’)</cite>)</p></li>
+<li><p><strong>dir_p</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – The Dirichlet hyperparameters for each entry in the word-topic matrix</p></li>
+<li><p><strong>jitter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) – Small jitter to add to covariance matrix diagonal</p></li>
+<li><p><strong>zero_loc</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Tensor of all-zeros matching the inducing points</p></li>
+<li><p><strong>uloc</strong> (<a class="reference external" href="https://docs.pyro.ai/en/stable/nn.html#pyro.nn.module.PyroParam" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.nn.module.PyroParam</span></code></a>) – Inducing point mean variational parameter</p></li>
+<li><p><strong>uscaletril</strong> (<a class="reference external" href="https://docs.pyro.ai/en/stable/nn.html#pyro.nn.module.PyroParam" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.nn.module.PyroParam</span></code></a>) – Inducing point lower triangular covariance Cholesky decomposition variational parameter</p></li>
+<li><p><strong>word_topic_probs</strong> (<a class="reference external" href="https://docs.pyro.ai/en/stable/nn.html#pyro.nn.module.PyroParam" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.nn.module.PyroParam</span></code></a>) – Maximum a posteriori word-topic matrix variational parameter</p></li>
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.pyro.ai/en/stable/contrib.gp.html#pyro.contrib.gp.kernels.Kernel" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.contrib.gp.kernels.Kernel</span></code></a>) – Gaussian process kernel</p></li>
+<li><p><strong>whiten</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether the Gaussian process covariance matrix is whitened</p></li>
+<li><p><strong>subsample_type</strong> (<a class="reference internal" href="#sgdrf.SubsampleType" title="sgdrf.SubsampleType"><code class="xref py py-class docutils literal notranslate"><span class="pre">SubsampleType</span></code></a>) – Subsampling strategy to use</p></li>
+<li><p><strong>subsample_params</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict[str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float]</span></code>) – A dictionary containing the subsample parameters <cite>exponential</cite> and <cite>weight</cite></p></li>
+<li><p><strong>subsample_n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Number of past observations to subsample in a single training step</p></li>
+<li><p><strong>subsample_n_tensor</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Number of past observations to subsample in a single training step, as a tensor</p></li>
+<li><p><strong>num_particles</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Number of parallel posterior latent samples to draw</p></li>
+<li><p><strong>objective</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.infer.ELBO</span></code>) – The objective function used during training</p></li>
+<li><p><strong>xs</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – All of the locations of past observations</p></li>
+<li><p><strong>ws</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – All of the past observations</p></li>
+<li><p><strong>optimizer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.optim.PyroOptim</span></code>) – Stochastic gradient descent optimizer</p></li>
+<li><p><strong>svi</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.infer.SVI</span></code>) – Stochastic variational inference helper object</p></li>
+<li><p><strong>fail_on_nan_loss</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether or not to raise an exception if training loss is NaN</p></li>
+<li><p><strong>n_xs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – The number of past observation locations</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.subsample">
+<span class="sig-name descname"><span class="pre">subsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#sgdrf.SGDRF.subsample" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a subsampling index tensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[int]</span></code>, <em>optional</em>) – The index to use as <cite>most recent</cite> for sampling, by default self.xs.size(0) - 1</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tensor representing the indices of the past observations chosen for this subsample</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – Raises a ValueError if the subsample type is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.topic_prob">
+<span class="sig-name descname"><span class="pre">topic_prob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#sgdrf.SGDRF.topic_prob" title="Permalink to this definition"></a></dt>
+<dd><p>Infer or predict topic probabilities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>xs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[torch.Tensor]</span></code>, <em>optional</em>) – The points to predict at, by default self.xs</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Topic probabilities at each point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.word_topic_prob">
+<span class="sig-name descname"><span class="pre">word_topic_prob</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.pyro.ai/en/stable/nn.html#pyro.nn.module.PyroParam" title="(in Pyro)"><span class="pre">PyroParam</span></a></span></span><a class="headerlink" href="#sgdrf.SGDRF.word_topic_prob" title="Permalink to this definition"></a></dt>
+<dd><p>Get the inferred word-topic probability matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The inferred word-topic probability matrix (MAP estimate)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.pyro.ai/en/stable/nn.html#pyro.nn.module.PyroParam" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.nn.module.PyroParam</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.word_prob">
+<span class="sig-name descname"><span class="pre">word_prob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#sgdrf.SGDRF.word_prob" title="Permalink to this definition"></a></dt>
+<dd><p>Infer or predict word probabilities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>xs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[torch.Tensor]</span></code>, <em>optional</em>) – The points to predict at, by default self.xs</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Word probabilities at each point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.check_inputs">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgdrf.SGDRF.check_inputs" title="Permalink to this definition"></a></dt>
+<dd><p>Check that input location and observation sizes agree in shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[torch.Tensor]</span></code>, <em>optional</em>) – The input locations, by default None</p></li>
+<li><p><strong>ws</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[torch.Tensor]</span></code>, <em>optional</em>) – The input observations, by default None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.process_inputs">
+<span class="sig-name descname"><span class="pre">process_inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgdrf.SGDRF.process_inputs" title="Permalink to this definition"></a></dt>
+<dd><p>Ingest new observations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[torch.Tensor]</span></code>, <em>optional</em>) – New locations, by default None</p></li>
+<li><p><strong>ws</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[torch.Tensor]</span></code>, <em>optional</em>) – New observations, by default None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></span><a class="headerlink" href="#sgdrf.SGDRF.step" title="Permalink to this definition"></a></dt>
+<dd><p>Take a single training step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Training loss for this step</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If <cite>self.fail_on_nan_loss</cite> is <cite>True</cite>, raise an error if <cite>loss</cite> is <cite>NaN</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.model">
+<span class="sig-name descname"><span class="pre">model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#sgdrf.SGDRF.model" title="Permalink to this definition"></a></dt>
+<dd><p>Run the stochastic variational inference prior and likelihood model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xs</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Locations of all observations</p></li>
+<li><p><strong>ws</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Observed categorical data</p></li>
+<li><p><strong>subsample</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Indices of past observations to use in this training step</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The observations</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.guide">
+<span class="sig-name descname"><span class="pre">guide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgdrf.SGDRF.guide" title="Permalink to this definition"></a></dt>
+<dd><p>Run the stochastic variational inference approximate posterior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xs</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Locations of all observations</p></li>
+<li><p><strong>ws</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Observed categorical data</p></li>
+<li><p><strong>subsample</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Indices of past observations to use in this training step</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.SGDRF.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#sgdrf.SGDRF.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Produce word probabilities at a given set of locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>xs</strong> (<a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a>) – Locations to generate observation probabilities at</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Observation probabilities</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="sgdrf.KernelType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sgdrf.</span></span><span class="sig-name descname"><span class="pre">KernelType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgdrf.KernelType" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>A wrapper for :<a class="reference external" href="https://docs.pyro.ai/en/stable/contrib.gp.html#pyro.contrib.gp.kernels.Isotropy" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.contrib.gp.kernels.Isotropy</span></code></a> kernels.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.KernelType.RBF">
+<span class="sig-name descname"><span class="pre">RBF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#sgdrf.KernelType.RBF" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="https://docs.pyro.ai/en/stable/contrib.gp.html#pyro.contrib.gp.kernels.RBF" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.contrib.gp.kernels.RBF</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.KernelType.RationalQuadratic">
+<span class="sig-name descname"><span class="pre">RationalQuadratic</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#sgdrf.KernelType.RationalQuadratic" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="https://docs.pyro.ai/en/stable/contrib.gp.html#pyro.contrib.gp.kernels.RationalQuadratic" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.contrib.gp.kernels.RationalQuadratic</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.KernelType.Exponential">
+<span class="sig-name descname"><span class="pre">Exponential</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#sgdrf.KernelType.Exponential" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="https://docs.pyro.ai/en/stable/contrib.gp.html#pyro.contrib.gp.kernels.Exponential" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.contrib.gp.kernels.Exponential</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.KernelType.Matern32">
+<span class="sig-name descname"><span class="pre">Matern32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#sgdrf.KernelType.Matern32" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="https://docs.pyro.ai/en/stable/contrib.gp.html#pyro.contrib.gp.kernels.Matern32" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.contrib.gp.kernels.Matern32</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.KernelType.Matern52">
+<span class="sig-name descname"><span class="pre">Matern52</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#sgdrf.KernelType.Matern52" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="https://docs.pyro.ai/en/stable/contrib.gp.html#pyro.contrib.gp.kernels.Matern52" title="(in Pyro)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.contrib.gp.kernels.Matern52</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.KernelType.instantiate">
+<span class="sig-name descname"><span class="pre">instantiate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lengthscale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (2.1.0a0+gitbe0b12e ))"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_dims</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.pyro.ai/en/stable/contrib.gp.html#pyro.contrib.gp.kernels.Isotropy" title="(in Pyro)"><span class="pre">Isotropy</span></a></span></span><a class="headerlink" href="#sgdrf.KernelType.instantiate" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate the kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Number of feature dimensions of inputs</p></li>
+<li><p><strong>lengthscale</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code>) – Length-scale parameter of this kernel</p></li>
+<li><p><strong>variance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code>) – Variance parameter of this kernel</p></li>
+<li><p><strong>active_dims</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[list[int]]</span></code>, <em>optional</em>) – List of feature dimensions of the input which the kernel acts on, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The instantiated kernel</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">kernels.Isotropy</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="sgdrf.SubsampleType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sgdrf.</span></span><span class="sig-name descname"><span class="pre">SubsampleType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgdrf.SubsampleType" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Flag" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Flag</span></code></a></p>
+<p>A simple wrapper for the various subsampling strategies.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.SubsampleType.latest">
+<span class="sig-name descname"><span class="pre">latest</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#sgdrf.SubsampleType.latest" title="Permalink to this definition"></a></dt>
+<dd><p>Always sample the most recent <cite>N</cite> observations</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.SubsampleType.uniform">
+<span class="sig-name descname"><span class="pre">uniform</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#sgdrf.SubsampleType.uniform" title="Permalink to this definition"></a></dt>
+<dd><p>Sample uniformly at random from all past observations.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.SubsampleType.exponential">
+<span class="sig-name descname"><span class="pre">exponential</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#sgdrf.SubsampleType.exponential" title="Permalink to this definition"></a></dt>
+<dd><p>Sample with probability proportional to
+<span class="math notranslate nohighlight">\(exp[{\alpha}(t-{\tau})]\)</span></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.SubsampleType.exponential_plus_uniform">
+<span class="sig-name descname"><span class="pre">exponential_plus_uniform</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#sgdrf.SubsampleType.exponential_plus_uniform" title="Permalink to this definition"></a></dt>
+<dd><p>Sample with probabilities representing a weighted sum of exponential &amp;
+uniform strategies.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.SubsampleType.exponential_plus_latest">
+<span class="sig-name descname"><span class="pre">exponential_plus_latest</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#sgdrf.SubsampleType.exponential_plus_latest" title="Permalink to this definition"></a></dt>
+<dd><p>Sample with probabilities representing a weighted sum of exponential &amp;
+latest strategies.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.SubsampleType.uniform_plus_latest">
+<span class="sig-name descname"><span class="pre">uniform_plus_latest</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#sgdrf.SubsampleType.uniform_plus_latest" title="Permalink to this definition"></a></dt>
+<dd><p>Sample with probabilities representing a weighted sum of uniform &amp;
+latest strategies.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="sgdrf.OptimizerType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sgdrf.</span></span><span class="sig-name descname"><span class="pre">OptimizerType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgdrf.OptimizerType" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>A wrapper for :<code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.optim.PyroOptim</span></code> optimizers.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.OptimizerType.Adadelta">
+<span class="sig-name descname"><span class="pre">Adadelta</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#sgdrf.OptimizerType.Adadelta" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.optim.Adadelta</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.OptimizerType.Adagrad">
+<span class="sig-name descname"><span class="pre">Adagrad</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#sgdrf.OptimizerType.Adagrad" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.optim.Adagrad</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.OptimizerType.Adam">
+<span class="sig-name descname"><span class="pre">Adam</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#sgdrf.OptimizerType.Adam" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.optim.Adam</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.OptimizerType.AdamW">
+<span class="sig-name descname"><span class="pre">AdamW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#sgdrf.OptimizerType.AdamW" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.optim.AdamW</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.OptimizerType.Adamax">
+<span class="sig-name descname"><span class="pre">Adamax</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#sgdrf.OptimizerType.Adamax" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.optim.Adamax</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgdrf.OptimizerType.SGD">
+<span class="sig-name descname"><span class="pre">SGD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#sgdrf.OptimizerType.SGD" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pyro.optim.SGD</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgdrf.OptimizerType.instantiate">
+<span class="sig-name descname"><span class="pre">instantiate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.pyro.ai/en/stable/optimization.html#pyro.optim.optim.PyroOptim" title="(in Pyro)"><span class="pre">PyroOptim</span></a></span></span><a class="headerlink" href="#sgdrf.OptimizerType.instantiate" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate the optimizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <em>optional</em>) – Optimizer learning rate, by default 0.001</p></li>
+<li><p><strong>clip_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <em>optional</em>) – Optimizer gradient norm maximum, by default 10.0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The instantiated optimizer</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">PyroOptim</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to SGDRFROS’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="readme.html" class="btn btn-neutral float-right" title="Readme File" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, John San Soucie.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
