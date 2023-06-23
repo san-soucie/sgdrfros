@@ -11,3 +11,4 @@ sphinx-rtd-theme
 bump2version
 pre-commit
 pytest
+sphinx-mdinclude
